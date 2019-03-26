@@ -3,11 +3,10 @@ import pandas as pd #0.24.1
 
 # Seting Database
 username = 'root'
-password = 'toor'
+password = 'alimkidar'
 host = 'localhost'
 port = '3306'
 database = 'db_log'
-table = 'tb_test2'
 
 class sql_con():
     def __init__(self, table):
@@ -19,14 +18,24 @@ class sql_con():
         except:
             # print('Error: Koneksi ke DB gagal!')
             self.connected = False
-        self.df = pd.read_sql(self.table, con=con)
-    def deduplicate(self, fieldname): #fieldname =['shortcode']
         if (self.connected):
-            self.df = self.df.drop_duplicates(subset=fieldname,keep='first')
-            self.df.to_sql(name=self.table ,con=con,if_exists='replace')
-    def add_data(self, data):
-        self.df.append(data)
-        self.df.to_sql(name=self.table ,con=con,if_exists='replace')
-    def make_csv(self, name):
-        self.df.to_csv(name, sep=",", index=False)
-        print('Saved as', str(name))
+            try:
+                self.df = pd.read_sql(self.table, con=self.con)
+            except:
+                df = pd.DataFrame()
+                df.to_sql(self.table, con=self.con, if_exists="append")
+                self.df = pd.read_sql(self.table, con=self.con)
+        else:
+            print('Error: Koneksi ke DB gagal!')
+    def add_data(self, bucket):
+        df_new = pd.DataFrame()
+        for i in bucket:
+            shortcode = i['shortcode']
+            dfc = pd.read_sql_query("""SELECT * FROM """ + self.table + """ WHERE shortcode """ + shortcode, con=con)
+            if len(dfc)!=0:
+                dfx = pd.DataFrame(i)
+                df_new = df_new.append(dfx)
+        df_new.to_sql(self.table,con=self.con, if_exists='append')
+    def get_df(self):
+        self.df = pd.read_sql(self.table, con=self.con)
+        return self.df
