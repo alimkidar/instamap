@@ -2,7 +2,6 @@ import pandas as pd
 import requests, json, time, unicodedata
 from con import sql_con
 
-headers = "User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0"
 def deEmojify(inputString):
     returnString = ""
     for character in inputString:
@@ -22,7 +21,7 @@ def load_json(link, headers):
     flag = False
     while flag == False:
         try:
-            req = requests.get(link, headers)
+            req = requests.get(link, headers, timeout=10)
             flag = True
             time.sleep(0.01)
         except:
@@ -32,7 +31,7 @@ def load_json(link, headers):
     while req.status_code != requests.codes.ok:
         #Gagal
         if attemp < 5:
-            req = requests.get(link, headers)
+            req = requests.get(link, headers, timeout=10)
         else:
             req = 0
             break
@@ -123,24 +122,27 @@ def open_post(data):
             'cluster':cluster
         })
     return bucket
-bucket_clean = []
-bucket_dirty = []
+def main():
+    headers = "User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0"
+    bucket_clean = []
+    bucket_dirty = []
 
-print('req...')
-explore_hashtag('exploreindonesia', bucket_dirty, bucket_clean)
-print('req success')
+    # print('req...')
+    explore_hashtag('exploreindonesia', bucket_dirty, bucket_clean)
+    # print('req success')
 
 
-tb_clean = sql_con('tb_clean')
-tb_clean.add_data(bucket_clean)
-df = tb_clean.get_df()
-tb_clean.close()
+    tb_clean = sql_con('tb_clean')
+    tb_clean.add_data(bucket_clean)
+    df = tb_clean.get_df()
+    tb_clean.close()
 
-tb_dirty = sql_con('tb_dirty')
-tb_dirty.add_data(bucket_dirty)
-tb_dirty.close()
+    tb_dirty = sql_con('tb_dirty')
+    tb_dirty.add_data(bucket_dirty)
+    tb_dirty.close()
 
-# df['latlng'] = df['lat'] + df['lng']
-df = df.drop_duplicates(subset=['location_id'], keep='last')
-df.to_csv('data.csv',index=False)
-print('done')
+    # df['latlng'] = df['lat'] + df['lng']
+    df = df.drop_duplicates(subset=['location_id'], keep='last')
+    df.to_csv('data.csv',index=False)
+    # print('done')
+main()
