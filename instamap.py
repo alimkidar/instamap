@@ -78,6 +78,7 @@ def open_post(data):
     height = root['dimensions']['height']
     width = root['dimensions']['width']
     shortcode = root['shortcode']
+    likes_count = root['edge_media_preview_like']['count']
     try:
         conversation = "'"+ root['edge_media_to_caption']['edges'][0]['node']['text'].replace(',','|')
     except:
@@ -108,6 +109,7 @@ def open_post(data):
             'height': height,
             'width': width,
             'shortcode':shortcode,
+            'likes_count':likes_count,
             'conversation': deEmojify(conversation),
             'timestamp': timestamp,
             'accessibility_caption': accessibility_caption,
