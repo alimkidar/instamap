@@ -22,7 +22,7 @@ class sql_con():
             engine = create_engine('mysql+mysqlconnector://'+username+':'+password+'@'+host+':'+port+'/'+database+'?use_unicode=true')
             self.con = engine.connect()
             self.connected = True
-            print('Koneksi berhasil', table)
+            # print('Koneksi berhasil', table)
         except:
             print('Error: Koneksi ke DB gagal!')
 

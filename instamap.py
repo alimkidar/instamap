@@ -48,7 +48,7 @@ def explore_hashtag(tag, bucket_dirty, bucket_clean):
     edges = data_tags['graphql']['hashtag']['edge_hashtag_to_media']['edges']
     for edge in edges:
         shortcode = edge['node']['shortcode']
-        print(shortcode)
+        print('sc:', shortcode)
         url_sc = 'https://www.instagram.com/p/'+shortcode+'/?__a=1'
         data_sc = load_json(url_sc, headers)
         lokasi = data_sc['graphql']['shortcode_media']['location']
@@ -126,7 +126,7 @@ def open_post(data):
 bucket_clean = []
 bucket_dirty = []
 
-print('req')
+print('req...')
 explore_hashtag('exploreindonesia', bucket_dirty, bucket_clean)
 print('req success')
 
