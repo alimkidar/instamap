@@ -134,9 +134,11 @@ print('req success')
 tb_clean = sql_con('tb_clean')
 tb_clean.add_data(bucket_clean)
 df = tb_clean.get_df()
+tb_clean.close()
 
 tb_dirty = sql_con('tb_dirty')
 tb_dirty.add_data(bucket_dirty)
+tb_dirty.close()
 
 df['latlng'] = df['lat'] + df['lng']
 df = df.drop_duplicates(subset=['latlng'], keep='last')
