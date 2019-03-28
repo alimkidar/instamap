@@ -24,7 +24,7 @@ class sql_con():
         for i in bucket:
             shortcode = i['shortcode']
             try:
-                dfc = pd.read_sql_query("""SELECT * FROM """ + self.table + """ WHERE shortcode = '""" + shortcode + "'", con=self.con)
+                dfc = pd .read_sql_query("""SELECT * FROM """ + self.table + """ WHERE shortcode = '""" + shortcode + "'", con=self.con)
                 if len(dfc)==0:
                     bucket_new.append(i)
                 else:

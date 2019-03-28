@@ -12,7 +12,12 @@ def deEmojify(inputString):
         except UnicodeEncodeError:
             returnString += ''
     return returnString
-
+def is_sampis(string):
+    sampis = ['jual', 'wts', 'order']
+    for i in sampis:
+        if i in sampis:
+            return True
+    return False
 def load_json(link, headers):
     flag = False
     while flag == False:
@@ -77,6 +82,11 @@ def open_post(data):
         conversation = "'"+ root['edge_media_to_caption']['edges'][0]['node']['text'].replace(',','|')
     except:
         conversation = "'"
+    location = root['location']
+    sampis = is_sampis(conversation)
+    if (sampis==False):
+        location=''
+        shortcode = 'sampah|' + root['shortcode']
     timestamp = root['taken_at_timestamp']
     type_post = root['__typename']
     if type_post=='GraphImage':
@@ -84,7 +94,7 @@ def open_post(data):
     else:
         accessibility_caption = ''
     cluster = classifier(accessibility_caption)
-    if (root['location']):
+    if (location):
         location_id = str(root['location']['id'])
         location_name = root['location']['name']
         url_loc = 'https://www.instagram.com/explore/locations/'+location_id+'/?__a=1'
@@ -119,11 +129,11 @@ explore_hashtag('exploreindonesia', bucket_dirty, bucket_clean)
 print('req success')
 
 
-tb_clean = sql_con('tb_clean1')
+tb_clean = sql_con('tb_clean')
 tb_clean.add_data(bucket_clean)
 df = tb_clean.get_df()
 
-tb_dirty = sql_con('tb_dirty1')
+tb_dirty = sql_con('tb_dirty')
 tb_dirty.add_data(bucket_dirty)
 
 df['latlng'] = df['lat'] + df['lng']
