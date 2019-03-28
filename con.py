@@ -7,7 +7,14 @@ password = 'alimkidar'
 host = 'localhost'
 port = '3306'
 database = 'db_log'
-
+"""
+        Documentation of sqlalchemy 
+connection = engine.connect()
+result = connection.execute("select username from users")
+for row in result:
+    print("username:", row['username'])
+connection.close()
+"""
 class sql_con():
     def __init__(self, table):
         self.table = table
