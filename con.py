@@ -16,26 +16,23 @@ class sql_con():
             self.con = engine.connect()
             self.connected = True
         except:
-            # print('Error: Koneksi ke DB gagal!')
-            self.connected = False
-        if (self.connected):
-            try:
-                self.df = pd.read_sql(self.table, con=self.con)
-            except:
-                df = pd.DataFrame()
-                df.to_sql(self.table, con=self.con, if_exists="append")
-                self.df = pd.read_sql(self.table, con=self.con)
-        else:
             print('Error: Koneksi ke DB gagal!')
+
     def add_data(self, bucket):
-        df_new = pd.DataFrame()
+        bucket_new = []
         for i in bucket:
             shortcode = i['shortcode']
-            dfc = pd.read_sql_query("""SELECT * FROM """ + self.table + """ WHERE shortcode """ + shortcode, con=con)
-            if len(dfc)!=0:
-                dfx = pd.DataFrame(i)
-                df_new = df_new.append(dfx)
-        df_new.to_sql(self.table,con=self.con, if_exists='append')
+            try:
+                dfc = pd.read_sql_query("""SELECT * FROM """ + self.table + """ WHERE shortcode = '""" + shortcode + "'", con=self.con)
+                if len(dfc)!=0:
+                    bucket_new.append(i)
+            except:
+                bucket_new.append(i)
+        if len(bucket_new) != 0:
+            df_new = pd.DataFrame(bucket_new)
+            print(df_new)
+            df_new.to_sql(self.table,con=self.con, if_exists='append')
+
     def get_df(self):
-        self.df = pd.read_sql(self.table, con=self.con)
-        return self.df
+        df = pd.read_sql(self.table, con=self.con)
+        return df
