@@ -140,7 +140,7 @@ tb_dirty = sql_con('tb_dirty')
 tb_dirty.add_data(bucket_dirty)
 tb_dirty.close()
 
-df['latlng'] = df['lat'] + df['lng']
-df = df.drop_duplicates(subset=['latlng'], keep='last')
+# df['latlng'] = df['lat'] + df['lng']
+df = df.drop_duplicates(subset=['location_id'], keep='last')
 df.to_csv('data.csv',index=False)
 print('done')
