@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine #sudo pip show
+from sqlalchemy import create_engine #sudo pip show #1.2.14
 import pandas as pd #0.24.1
 
 # Seting Database

@@ -1,5 +1,5 @@
-import pandas as pd
-import requests, json, time, unicodedata
+import pandas as pd 
+import requests, json, time, unicodedata #Requests 2.21.0
 from con import sql_con
 
 def deEmojify(inputString):
